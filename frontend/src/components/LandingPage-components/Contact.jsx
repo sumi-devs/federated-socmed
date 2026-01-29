@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import contactIllustration from '../../Images/image5.png';
 
 /* ===== COLORS ===== */
 const WHITE = '#FFFFFF';
@@ -7,68 +8,78 @@ const INDIGO = '#4F46E5';
 const INDIGO_DARK = '#4338CA';
 const TEXT_DARK = '#0F172A';
 const TEXT_MUTED = '#475569';
-const BG_LIGHT = '#F8FAFC';
 
 /* ===== SECTION ===== */
 
 const Section = styled.section`
   width: 100vw;
   padding: 100px 24px;
-  background-color: ${BG_LIGHT};
+  background-color: ${WHITE};
 
   display: flex;
   justify-content: center;
 `;
 
+/* ===== LAYOUT ===== */
+
 const Container = styled.div`
-  max-width: 900px;
+  max-width: 1200px;
   width: 100%;
-  background-color: ${WHITE};
-  border-radius: 20px;
-  padding: 64px 48px;
 
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  text-align: center;
+  gap: 72px;
 
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.06);
-
-  @media (max-width: 768px) {
-    padding: 48px 24px;
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 48px;
   }
 `;
 
-/* ===== TEXT ===== */
+/* ===== LEFT CONTENT ===== */
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 520px;
+
+  @media (max-width: 900px) {
+    text-align: center;
+    align-items: center;
+    max-width: 100%;
+  }
+`;
 
 const Title = styled.h2`
-  font-size: 36px;
+  font-size: 40px;
   font-weight: 700;
   color: ${TEXT_DARK};
-  margin-bottom: 12px;
 `;
 
 const Description = styled.p`
   font-size: 18px;
   line-height: 1.6;
   color: ${TEXT_MUTED};
-  max-width: 600px;
-  margin-bottom: 36px;
 `;
 
 /* ===== BUTTON ===== */
 
 const ContactButton = styled.a`
+  margin-top: 16px;
+  width: fit-content;
   padding: 14px 32px;
+
   font-size: 16px;
   font-weight: 600;
+  text-decoration: none;
 
   background-color: ${INDIGO};
   color: ${WHITE};
   border-radius: 12px;
-  text-decoration: none;
 
-  transition: background-color 0.25s ease, transform 0.2s ease;
+  transition: all 0.25s ease;
 
   &:hover {
     background-color: ${INDIGO_DARK};
@@ -76,22 +87,48 @@ const ContactButton = styled.a`
   }
 `;
 
+/* ===== RIGHT IMAGE ===== */
+
+const IllustrationWrapper = styled.div`
+
+
+  img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 850px;
+    height: auto;
+  }
+`;
+
+
 /* ===== COMPONENT ===== */
 
 const ContactCTA = () => {
   return (
     <Section id="contact">
       <Container>
-        <Title>Need help or have questions?</Title>
+        {/* LEFT SIDE */}
+        <Content>
+          <Title>Need help or have questions?</Title>
 
-        <Description>
-          If you’d like more information, need assistance, or have any questions
-          about the platform, we’re here to help.
-        </Description>
+          <Description>
+            Reach out if you need assistance, clarification, or have any
+            enquiries about the platform. We’re happy to help.
+          </Description>
 
-        <ContactButton href="/contact">
-          Get in Touch
-        </ContactButton>
+          <ContactButton href="/contact">
+            Get in Touch
+          </ContactButton>
+        </Content>
+
+        {/* RIGHT SIDE */}
+        <IllustrationWrapper>
+          <img
+            src={contactIllustration}
+            alt="Contact and support illustration"
+          />
+        </IllustrationWrapper>
       </Container>
     </Section>
   );

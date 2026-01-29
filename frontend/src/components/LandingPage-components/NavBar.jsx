@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import logo from '../../Images/Logo.png';
 
-const DARK_BLUE = '#192746';
+const DARK_BLUE = '#4F46E5';
 const WHITE = '#FFFFFF';
 
 const NavContainer = styled.nav`
@@ -15,7 +16,7 @@ const NavContainer = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 50px;
+  padding: 0px 50px 0px 0px;
   box-sizing: border-box;
 
   background-color: ${({ $isScrolled }) =>
@@ -33,11 +34,8 @@ const NavContainer = styled.nav`
     box-shadow 0.3s ease;
 `;
 
-const Logo = styled.h1`
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0;
-  cursor: pointer;
+const Logo = styled.img`
+  width: 200px;
 `;
 
 const NavLinks = styled.ul`
@@ -47,9 +45,7 @@ const NavLinks = styled.ul`
   margin: 0;
   padding: 0;
 
-  @media (max-width: 768px) {
-    display: none;
-  }
+
 `;
 
 const NavItem = styled.li`
@@ -89,7 +85,7 @@ const ActionButton = styled.button`
 
   &:hover {
     background-color: ${({ $isScrolled }) =>
-      $isScrolled ? '#1E293B' : WHITE};
+      $isScrolled ? '#3f38bc' : WHITE};
     color: ${({ $isScrolled }) =>
       $isScrolled ? WHITE : DARK_BLUE};
   }
@@ -110,7 +106,7 @@ const NavBar = () => {
 
   return (
     <NavContainer $isScrolled={isScrolled}>
-      <Logo>Brand.</Logo>
+      <Logo src={logo} alt="Brand Logo" />
 
       <NavLinks>
         <NavItem><a href="#home">Home</a></NavItem>

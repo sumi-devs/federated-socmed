@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import Image3 from '../../Images/Image3.png';
+import Image4 from '../../Images/Image4.png';
+
 
 /* ===== COLORS ===== */
 const WHITE = '#FFFFFF';
@@ -91,6 +94,12 @@ const ImageOne = styled.img`
 
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease-in-out;
+
+
+  &:hover {
+    transform: scale(1.03);
+  }
 `;
 
 const ImageTwo = styled.img`
@@ -104,6 +113,34 @@ const ImageTwo = styled.img`
   border-radius: 16px;
   border: 6px solid ${WHITE};
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.03);
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  margin-top: 28px;
+`;
+
+const LearnMoreButton = styled.a`
+  display: inline-block;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+
+  background-color: ${INDIGO};
+  color: ${WHITE};
+  border-radius: 12px;
+
+  transition: all 0.25s ease;
+
+  &:hover {
+    background-color: #3f38bc;
+    transform: translateY(-2px);
+  }
 `;
 
 /* ===== COMPONENT ===== */
@@ -136,16 +173,22 @@ const ServersSection = () => {
             <li>No single server controls the entire platform</li>
             <li>Communities grow independently and naturally</li>
           </Points>
+
+          <ButtonWrapper>
+            <LearnMoreButton href="/servers">
+              Learn More About Servers
+            </LearnMoreButton>
+          </ButtonWrapper>
         </Content>
 
         {/* RIGHT SIDE */}
         <ImagesWrapper>
           <ImageOne
-            src="https://images.unsplash.com/photo-1526378722484-bd91ca387e72"
+            src={Image3}
             alt="Server illustration"
           />
           <ImageTwo
-            src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31"
+            src={Image4}
             alt="Multiple servers illustration"
           />
         </ImagesWrapper>

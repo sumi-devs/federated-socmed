@@ -18,7 +18,7 @@ const Container = styled.div`
 const FeaturesSection = styled.section`
   width: 100vw;
   padding: 100px 24px;
-  background-color: #F8FAFC;
+  background-color: #ffffff;
 
   display: flex;
   flex-direction: column;

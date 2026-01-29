@@ -43,12 +43,13 @@ const ExploreButton = styled.button`
     font-size: 16px;
     border: none;
     border-radius: 8px;
-    background-color: #192746;
+    background-color: #4F46E5;
     color: white;
     cursor: pointer;
-    transition: opacity 0.3s;
+    transition: all 0.3s ease-in-out;
 
     &:hover {
+        scale: 1.05;
         opacity: 0.95;
     }
 `;
