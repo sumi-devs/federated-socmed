@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-/* ===== COLORS ===== */
-const DARK_BLUE = '#0F172A';
+const DARK_BLUE = '#192746';
 const WHITE = '#FFFFFF';
-
-/* ===== STYLED COMPONENTS ===== */
 
 const NavContainer = styled.nav`
   position: fixed;
@@ -21,11 +18,9 @@ const NavContainer = styled.nav`
   padding: 0 50px;
   box-sizing: border-box;
 
-  /* BACKGROUND CHANGE */
   background-color: ${({ $isScrolled }) =>
     $isScrolled ? WHITE : 'transparent'};
 
-  /* TEXT COLOR CHANGE */
   color: ${({ $isScrolled }) =>
     $isScrolled ? DARK_BLUE : WHITE};
 
@@ -100,7 +95,6 @@ const ActionButton = styled.button`
   }
 `;
 
-/* ===== MAIN COMPONENT ===== */
 
 const NavBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);

@@ -1,9 +1,7 @@
 import styled from "styled-components"
-// Make sure this path is correct for your project structure
 import backgroundImage from '../../Images/Image2.png'
 
 
-// Update background-image here
 const ExploreContainer = styled.div`
     display: flex;
     flex-direction: row;
@@ -45,13 +43,13 @@ const ExploreButton = styled.button`
     font-size: 16px;
     border: none;
     border-radius: 8px;
-    background-color: #4F46E5;
+    background-color: #192746;
     color: white;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: opacity 0.3s;
 
     &:hover {
-        background-color: #4338CA;
+        opacity: 0.95;
     }
 `;
 
@@ -70,9 +68,7 @@ const Explore = () => {
             <SuportingText>Connect with people, follow conversations, and participate in topic-driven channels designed for thoughtful interaction.</SuportingText>
             <ExploreButton>Explore Now</ExploreButton>
         </ExploreContent>
-        <SloganText>
-            "Discover. Connect. Thrive. Your journey starts here."
-        </SloganText>
+ 
     </ExploreContainer>
   )
 }
