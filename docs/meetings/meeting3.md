@@ -49,9 +49,9 @@ Hemanth Kumar G T, Sumithra S, Ragul C V
 ## Tasks
 - UI design:
     - Ragul C V: Admin page/dashboard
-    - SUmithra S: Settings, Server Details, Profile
+    - Sumithra S: Settings, Server Details, Profile
 - Schema design:
     - Hemanth Kumar G T: Channel Schema
     - Sumithra S: Post Schema
-    - Sreepathy Joshy: Report Schema
-    - Ragul C V: User Schema
+    - Sreepathy Joshy: User Schema
+    - Ragul C V: Report Schema

@@ -1,36 +1,60 @@
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   FiHome,
   FiUser,
-  FiMessageCircle,
-  FiUsers,
   FiFileText,
-  FiBookOpen,
-  FiCalendar,
-  FiSettings
+  FiSettings,
+  FiServer
 } from 'react-icons/fi';
 
 const SidebarLeft = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleNavClick = (path) => {
+    navigate(path);
+  };
+
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
   return (
     <aside className="left-sidebar">
       <div className="logo">Connected</div>
-
+      
       <nav className="main-nav">
-        <div className="nav-item active">
+        <button 
+          className={`nav-item ${isActive('/') ? 'active' : ''}`}
+          onClick={() => handleNavClick('/')}
+        >
           <FiHome className="icon" /> Home
-        </div>
-
-        <div className="nav-item">
+        </button>
+        <button 
+          className={`nav-item ${isActive('/profile') ? 'active' : ''}`}
+          onClick={() => handleNavClick('/profile')}
+        >
           <FiUser className="icon" /> Profile
-        </div>
-
-        <div className="nav-item">
+        </button>
+        <button 
+          className={`nav-item ${isActive('/channels') ? 'active' : ''}`}
+          onClick={() => handleNavClick('/channels')}
+        >
           <FiFileText className="icon" /> Channels
-        </div>
-
-        <div className="nav-item">
+        </button>
+        <button 
+          className={`nav-item ${isActive('/server-details') ? 'active' : ''}`}
+          onClick={() => handleNavClick('/server-details')}
+        >
+          <FiServer className="icon" /> Server Details
+        </button>
+        <button 
+          className={`nav-item ${isActive('/settings') ? 'active' : ''}`}
+          onClick={() => handleNavClick('/settings')}
+        >
           <FiSettings className="icon" /> Settings
-        </div>
+        </button>
       </nav>
     </aside>
   );
