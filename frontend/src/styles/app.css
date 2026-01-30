@@ -14,7 +14,7 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   background: linear-gradient(135deg, #ffc9c9 0%, #ffb3c9 100%);
   min-height: 100vh;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .app {
