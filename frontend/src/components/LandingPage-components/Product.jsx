@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
 import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 
+
 const WHITE = '#FFFFFF';
 const INDIGO = '#4F46E5';
 const INDIGO_DARK = '#4338CA';
@@ -15,7 +16,6 @@ const BORDER_LIGHT = '#E5E7EB';
 const Section = styled.section`
   width: 100vw;
   min-height: 100vh;
-  padding: 80px 24px;
   background-color: ${BG_LIGHT};
 
   display: flex;

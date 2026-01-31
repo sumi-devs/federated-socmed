@@ -1,15 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import contactIllustration from '../../Images/image5.png';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
-/* ===== COLORS ===== */
 const WHITE = '#FFFFFF';
 const INDIGO = '#4F46E5';
 const INDIGO_DARK = '#4338CA';
 const TEXT_DARK = '#0F172A';
 const TEXT_MUTED = '#475569';
 
-/* ===== SECTION ===== */
 
 const Section = styled.section`
   width: 100vw;
@@ -20,7 +19,6 @@ const Section = styled.section`
   justify-content: center;
 `;
 
-/* ===== LAYOUT ===== */
 
 const Container = styled.div`
   max-width: 1200px;
@@ -37,7 +35,6 @@ const Container = styled.div`
   }
 `;
 
-/* ===== LEFT CONTENT ===== */
 
 const Content = styled.div`
   display: flex;
@@ -64,7 +61,6 @@ const Description = styled.p`
   color: ${TEXT_MUTED};
 `;
 
-/* ===== BUTTON ===== */
 
 const ContactButton = styled.a`
   margin-top: 16px;
@@ -87,7 +83,6 @@ const ContactButton = styled.a`
   }
 `;
 
-/* ===== RIGHT IMAGE ===== */
 
 const IllustrationWrapper = styled.div`
 
@@ -108,7 +103,6 @@ const ContactCTA = () => {
   return (
     <Section id="contact">
       <Container>
-        {/* LEFT SIDE */}
         <Content>
           <Title>Need help or have questions?</Title>
 
@@ -118,11 +112,10 @@ const ContactCTA = () => {
           </Description>
 
           <ContactButton href="/contact">
-            Get in Touch
+            Get in Touch <ArrowForwardIcon style={{ verticalAlign: 'middle' }} />
           </ContactButton>
         </Content>
 
-        {/* RIGHT SIDE */}
         <IllustrationWrapper>
           <img
             src={contactIllustration}

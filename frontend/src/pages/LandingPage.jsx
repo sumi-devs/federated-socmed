@@ -11,14 +11,17 @@ import Server from '../components/LandingPage-components/Server';
 import { featuresData } from '../components/LandingPage-components/featuresData';
 import Contact from '../components/LandingPage-components/Contact';
 
-const Container = styled.div`
+const Container_LandingPage = styled.div`
   width: 100vw;
+  overflow-x: hidden;
 `;
 
 const FeaturesSection = styled.section`
   width: 100vw;
-  padding: 100px 24px;
+  padding: 100px 0px;
   background-color: #ffffff;
+  overflow-x: hidden;
+
 
   display: flex;
   flex-direction: column;
@@ -51,19 +54,13 @@ const FeaturesGrid = styled.div`
   max-width: 1100px;
   width: 100%;
 
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 
 const LandingPage = () => {
   return (
-    <Container>
+    <Container_LandingPage>
       <NavBar />
       <Explore />
       <Product />
@@ -92,7 +89,7 @@ const LandingPage = () => {
       <Server/>
       <Contact />
       <Footer />
-    </Container>
+    </Container_LandingPage>
   );
 };
 

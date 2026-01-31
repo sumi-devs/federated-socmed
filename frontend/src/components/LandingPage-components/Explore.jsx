@@ -1,5 +1,6 @@
 import styled from "styled-components"
 import backgroundImage from '../../Images/Image2.png'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 
 const ExploreContainer = styled.div`
@@ -67,7 +68,7 @@ const Explore = () => {
         <ExploreContent>
             <TagLine>Follow people. Join conversations.</TagLine>
             <SuportingText>Connect with people, follow conversations, and participate in topic-driven channels designed for thoughtful interaction.</SuportingText>
-            <ExploreButton>Explore Now</ExploreButton>
+            <ExploreButton>Explore Now <ArrowForwardIcon style={{ verticalAlign: 'middle' }} /></ExploreButton>
         </ExploreContent>
  
     </ExploreContainer>
