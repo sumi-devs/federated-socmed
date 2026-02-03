@@ -6,17 +6,29 @@ const PostList = ({ posts, onLike, activeTimeline }) => {
     const now = new Date();
     const postDate = new Date(date);
     const diffInMinutes = Math.floor((now - postDate) / 60000);
-    
+
     if (diffInMinutes < 1) return 'Just now';
     if (diffInMinutes < 60) return `${diffInMinutes} min. ago`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} hours ago`;
     return postDate.toLocaleDateString();
   };
 
-  if (activeTimeline === 'federated' && posts.length === 0) {
+  const getInitials = (name) => {
+    if (!name) return '??';
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  if (!posts || posts.length === 0) {
     return (
       <div className="empty-state">
-        Federated timeline is empty
+        {activeTimeline === 'federated'
+          ? 'Federated timeline is empty'
+          : 'No posts yet. Be the first to post!'}
       </div>
     );
   }
@@ -27,9 +39,11 @@ const PostList = ({ posts, onLike, activeTimeline }) => {
         <div key={post._id} className="post">
           <div className="post-header">
             <div className="post-author">
-              <div className="user-avatar">{post.authorAvatar}</div>
+              <div className="user-avatar">
+                {getInitials(post.userDisplayName || post.author)}
+              </div>
               <div>
-                <div className="author-name">{post.author}</div>
+                <div className="author-name">{post.userDisplayName || post.author || 'Anonymous'}</div>
                 <div className="post-time">{formatTime(post.createdAt)}</div>
               </div>
             </div>
@@ -37,30 +51,34 @@ const PostList = ({ posts, onLike, activeTimeline }) => {
               <FiMoreHorizontal />
             </button>
           </div>
-          
-          <div className="post-content">{post.content}</div>
-          
-          {post.images && post.images.length > 0 && (
+
+          <div className="post-content">{post.description || post.content}</div>
+
+          {post.image && (
             <div className="post-images">
-              {post.images.map((img, idx) => (
-                <img key={idx} src={img} alt="" />
-              ))}
+              <img src={post.image} alt="" />
             </div>
           )}
-          
+
           <div className="post-footer">
-            <button 
+            <button
               className="post-action"
               onClick={() => onLike(post._id)}
             >
               <FiThumbsUp className="action-icon" />
               <span>Like</span>
-              {post.likes > 0 && <span className="count">{post.likes}</span>}
+              {(post.likeCount > 0 || post.likes > 0) && (
+                <span className="count">{post.likeCount || post.likes}</span>
+              )}
             </button>
             <button className="post-action">
               <FiMessageCircle className="action-icon" />
               <span>Comment</span>
-              {post.comments > 0 && <span className="count">{post.comments}</span>}
+              {((post.comments && post.comments.length > 0) || (typeof post.comments === 'number' && post.comments > 0)) && (
+                <span className="count">
+                  {Array.isArray(post.comments) ? post.comments.length : post.comments}
+                </span>
+              )}
             </button>
             <button className="post-action">
               <FiShare2 className="action-icon" />

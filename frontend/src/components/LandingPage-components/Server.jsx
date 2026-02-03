@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Image3 from '../../Images/Image3.png';
 import Image4 from '../../Images/Image4.png';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 
 /* ===== COLORS ===== */
@@ -15,14 +16,15 @@ const BG_LIGHT = '#F8FAFC';
 
 const Section = styled.section`
   width: 100vw;
-  padding: 100px 24px;
+  padding: 100px 0px;
   background-color: ${BG_LIGHT};
+    overflow-x: hidden;
 
   display: flex;
   justify-content: center;
 `;
 
-const Container = styled.div`
+const Container_Server = styled.div`
   max-width: 1200px;
   width: 100%;
 
@@ -37,7 +39,6 @@ const Container = styled.div`
   }
 `;
 
-/* ===== LEFT CONTENT ===== */
 
 const Content = styled.div`
   display: flex;
@@ -72,7 +73,6 @@ const Points = styled.ul`
   }
 `;
 
-/* ===== RIGHT IMAGES ===== */
 
 const ImagesWrapper = styled.div`
   position: relative;
@@ -148,8 +148,7 @@ const LearnMoreButton = styled.a`
 const ServersSection = () => {
   return (
     <Section id="servers">
-      <Container>
-        {/* LEFT SIDE */}
+      <Container_Server>
         <Content>
           <Title>
             Communities Powered by <span>Servers</span>
@@ -176,12 +175,11 @@ const ServersSection = () => {
 
           <ButtonWrapper>
             <LearnMoreButton href="/servers">
-              Learn More About Servers
+              Learn More About Servers <ArrowForwardIcon style={{ verticalAlign: 'middle'}} />
             </LearnMoreButton>
           </ButtonWrapper>
         </Content>
 
-        {/* RIGHT SIDE */}
         <ImagesWrapper>
           <ImageOne
             src={Image3}
@@ -192,7 +190,7 @@ const ServersSection = () => {
             alt="Multiple servers illustration"
           />
         </ImagesWrapper>
-      </Container>
+      </Container_Server>
     </Section>
   );
 };
