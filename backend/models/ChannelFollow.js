@@ -1,8 +1,10 @@
+import mongoose from "mongoose";
+
 const channelFollowSchema = new mongoose.Schema(
   {
     userFederatedId: {
       type: String,
-      required: true
+      required: true,
     },
 
     channelFederatedId: {

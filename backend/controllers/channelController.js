@@ -1,5 +1,6 @@
 import { createError } from "../utils/error.js";
 import Channel from "../models/Channel.js";
+import ChannelFollow from "../models/ChannelFollow.js";
 
 
 export const createChannel = async (req,res,next) =>{
@@ -55,8 +56,8 @@ export const deleteChannel = async (req,res,next)=>{
 
 export const getChannel = async (req,res,next)=>{
     try{
-        const ChannelId = req.params.id;
-        const channel = await Channel.findById(ChannelId);
+        const channelName = req.params.channelName;
+        const channel = await Channel.findOne({ name: channelName });
         if(!channel){
             return next(createError(404, "Channel not found"));
         }
@@ -84,12 +85,12 @@ export const getAllChannels = async (req,res,next)=>{
 
 export const updateChannelDescription = async (req,res,next) =>{
     try{
-        const channelId = req.params.id;
+        const channelName = req.params.channelName;
         const {description} = req.body;
         if(!description){
             return next(createError(400, "Description is required"));
         }
-        const channel = await Channel.findById(channelId);
+        const channel = await Channel.findOne({ name: channelName });
         if(!channel){
             return next(createError(404, "Channel not found"));
         }   
@@ -106,12 +107,12 @@ export const updateChannelDescription = async (req,res,next) =>{
 
 export const updateChannelImage = async (req,res,next) =>{
     try{
-        const channelId = req.params.id;
+        const channelName = req.params.channelName;
         const {image} = req.body;
         if(!image){
             return next(createError(400, "Image is required"));
         }
-        const channel = await Channel.findById(channelId);
+        const channel = await Channel.findOne({ name: channelName });
         if(!channel){
             return next(createError(404, "Channel not found"));
         }
@@ -128,12 +129,12 @@ export const updateChannelImage = async (req,res,next) =>{
 
 export const updateChannelRules = async (req,res,next) =>{
     try{
-        const channelId = req.params.id;
+        const channelName = req.params.channelName;
         const {rules} = req.body;
         if(!rules || !Array.isArray(rules)){
             return next(createError(400, "Rules must be an array"));
         }   
-        const channel = await Channel.findById(channelId);
+        const channel = await Channel.findOne({ name: channelName });
         if(!channel){
             return next(createError(404, "Channel not found"));
         }
@@ -147,3 +148,66 @@ export const updateChannelRules = async (req,res,next) =>{
         next(err);
     }
 }
+
+// User actions on channels (follow/unfollow) 
+
+export const followChannel = async (req,res,next)=>{
+    try{
+        const channelName = req.params.channelName;
+        const channel = await Channel.findOne({ name: channelName });
+        if(!channel){
+            return next(createError(404, "Channel not found"));
+        }
+        const userFederatedId = req.user.federatedId;
+        const existingFollow = await ChannelFollow.findOne({userFederatedId: userFederatedId, channelFederatedId: channel.federatedId});
+        if(existingFollow !== null){
+            return next(createError(400, "You are already following this channel"));
+        }
+        const newFollow = new ChannelFollow({
+            userFederatedId: userFederatedId,
+            channelFederatedId: channel.federatedId,
+            channelName: channel.name,
+            serverName: channel.serverName
+        });
+        await newFollow.save();
+        channel.followersCount += 1;
+        await channel.save();
+        res.status(200).json({
+            success: true,
+            message: `You are now following the channel: ${channel.name}`
+        });
+    }catch(err){
+        next(err);
+    }
+}
+
+export const unFollowChannel = async (req,res,next)=>{
+    const channelName = req.params.channelName;
+    const channel = await Channel.findOne({ name: channelName });
+    if(!channel){
+        return next(createError(404, "Channel not found"));
+    }
+    const userFederatedId = req.user.federatedId;
+    const existingFollow = await ChannelFollow.findByIdAndDelete({userFederatedId: userFederatedId, channelFederatedId: channel.federatedId});
+    if(existingFollow === null){
+        return next(createError(400, "You are not following this channel"));
+    }
+    channel.followersCount = Math.max(0, channel.followersCount - 1);
+    await channel.save();
+    res.status(200).json({
+        success: true,
+        message: `You have unfollowed the channel: ${channel.name}`
+    });
+}
+
+export const checkFollowStatus = async (req,res,next)=>{
+
+}
+
+export const getChannelFollowers = async (req,res,next)=>{
+
+}
+
+
+
+
