@@ -4,7 +4,7 @@ import LandingPage from './pages/LandingPage';
 import './styles/app.css';
 
 function App() {
-  return <AuthPage/>;
+  return <Home/>;
 }
 
 export default App;
