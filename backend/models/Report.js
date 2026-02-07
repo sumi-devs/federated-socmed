@@ -7,7 +7,6 @@ const reportSchema = new mongoose.Schema(
             type: String,
             required: true,
             trim: true
-            // Reference to the User's federatedId who created the report
         },
 
         /* ===== REPORT TARGET ===== */
@@ -15,7 +14,6 @@ const reportSchema = new mongoose.Schema(
             type: String,
             required: true,
             trim: true
-            // federatedId of the User, Post, or Channel being reported
         },
 
         targetType: {
