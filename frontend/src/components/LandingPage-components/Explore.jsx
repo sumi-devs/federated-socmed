@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { Link } from 'react-router-dom'
 import backgroundImage from '../../Images/Image2.png'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
@@ -39,7 +40,7 @@ const SuportingText = styled.p`
     line-height: 1.5;
 `;
 
-const ExploreButton = styled.button`
+const ExploreButton = styled(Link)`
     padding: 12px 24px;
     font-size: 16px;
     border: none;
@@ -48,6 +49,10 @@ const ExploreButton = styled.button`
     color: white;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 
     &:hover {
         scale: 1.05;
@@ -63,16 +68,16 @@ const SloganText = styled.h3`
 `;
 
 const Explore = () => {
-  return (
-    <ExploreContainer>
-        <ExploreContent>
-            <TagLine>Follow people. Join conversations.</TagLine>
-            <SuportingText>Connect with people, follow conversations, and participate in topic-driven channels designed for thoughtful interaction.</SuportingText>
-            <ExploreButton>Explore Now <ArrowForwardIcon style={{ verticalAlign: 'middle' }} /></ExploreButton>
-        </ExploreContent>
- 
-    </ExploreContainer>
-  )
+    return (
+        <ExploreContainer>
+            <ExploreContent>
+                <TagLine>Follow people. Join conversations.</TagLine>
+                <SuportingText>Connect with people, follow conversations, and participate in topic-driven channels designed for thoughtful interaction.</SuportingText>
+                <ExploreButton to="/servers">Explore Now <ArrowForwardIcon style={{ verticalAlign: 'middle' }} /></ExploreButton>
+            </ExploreContent>
+
+        </ExploreContainer>
+    )
 }
 
 export default Explore

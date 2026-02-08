@@ -12,7 +12,7 @@ function ServerHeader() {
                 lineHeight: '1.6',
                 maxWidth: '680px'
             }}>
-                Mastodon is not a single website. To use it, you need to make an account with a provider—we call them <strong style={{ color: 'var(--primary)' }}>servers</strong>—that lets you connect with other people across the network.
+                Our platform is made up of independent communities called <strong style={{ color: 'var(--primary)' }}>servers</strong>. Join a server that matches your interests to connect with like-minded people across the network.
             </p>
         </header>
     );
