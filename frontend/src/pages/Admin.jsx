@@ -43,7 +43,7 @@ const Admin = () => {
         const [usersRes, postsRes, channelsRes, reportsRes] = await Promise.allSettled([
           axios.get(`${API_BASE_URL}/user`, config),
           axios.get(`${API_BASE_URL}/posts`, config),
-          axios.get(`${API_BASE_URL}/channel`, config),
+          axios.get(`${API_BASE_URL}/channels`, config),
           axios.get(`${API_BASE_URL}/reports?limit=100`, config)
         ]);
 
