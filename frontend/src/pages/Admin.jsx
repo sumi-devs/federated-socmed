@@ -106,6 +106,14 @@ const Admin = () => {
               <span>🔐</span>
               <span>Security</span>
             </div>
+
+            <div
+              className={`admin-nav-item ${activeTab === 'server' ? 'active' : ''}`}
+              onClick={() => setActiveTab('server')}
+            >
+              <span>🖥️</span>
+              <span>Server Info</span>
+            </div>
           </nav>
         </aside>
 
@@ -361,6 +369,35 @@ const Admin = () => {
                 </tbody>
               </table>
             </section>
+          )}
+
+          {activeTab === 'server' && (
+            <>
+              <section className="admin-section">
+                <div className="section-header">
+                  <h2 className="section-h2">Server Identity</h2>
+                  <button className="primary-btn" onClick={() => alert('Edit functionality coming soon')}>Edit</button>
+                </div>
+                <div className="server-info-content">
+                  <h3 style={{ fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.05em' }}>Server Name</h3>
+                  <div style={{ fontSize: '18px', fontWeight: '600', color: '#111827', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ fontSize: '24px' }}>🖥️</span>
+                    <span>Connected Main Server</span>
+                  </div>
+                </div>
+              </section>
+
+              <section className="admin-section">
+                <div className="section-header">
+                  <h2 className="section-h2">Description</h2>
+                </div>
+                <div className="server-info-content">
+                  <div style={{ fontSize: '15px', lineHeight: '1.6', color: '#374151', backgroundColor: '#f9fafb', padding: '16px', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
+                    This is the primary community server for Connected. All general discussions, updates, and public channels are hosted here.
+                  </div>
+                </div>
+              </section>
+            </>
           )}
 
         </main>
