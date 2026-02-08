@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import {
+  FiGrid, FiUsers, FiHash, FiMessageCircle, FiShield,
+  FiList, FiSlash, FiLock, FiServer, FiTrendingUp,
+  FiTrendingDown, FiEdit2, FiFileText, FiActivity
+} from 'react-icons/fi';
 import '../styles/Admin.css';
+
+const API_BASE_URL = 'http://localhost:5000/api';
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -10,10 +18,90 @@ const Admin = () => {
     engagement: 68
   });
 
-  // Simulate real-time updates as per user code
+  // Channel state
+  const [channels, setChannels] = useState([]);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newChannel, setNewChannel] = useState({
+    name: '',
+    description: '',
+    visibility: 'public',
+    rules: '',
+    image: ''
+  });
+  const [channelLoading, setChannelLoading] = useState(false);
+  const [channelError, setChannelError] = useState('');
+
+  // Fetch channels when channels tab is active
+  useEffect(() => {
+    if (activeTab === 'channels') {
+      fetchChannels();
+    }
+  }, [activeTab]);
+
+  const fetchChannels = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_BASE_URL}/channels`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data.success) {
+        setChannels(response.data.channels);
+      }
+    } catch (err) {
+      console.error('Failed to fetch channels:', err);
+    }
+  };
+
+  const handleCreateChannel = async (e) => {
+    e.preventDefault();
+    setChannelLoading(true);
+    setChannelError('');
+
+    try {
+      const token = localStorage.getItem('token');
+      const channelData = {
+        name: newChannel.name,
+        description: newChannel.description,
+        visibility: newChannel.visibility,
+        rules: newChannel.rules.split(',').map(r => r.trim()).filter(r => r),
+        image: newChannel.image || 'https://images.unsplash.com/photo-1557683316-973673baf926?w=400'
+      };
+
+      const response = await axios.post(`${API_BASE_URL}/channels`, channelData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.data.success) {
+        setShowCreateModal(false);
+        setNewChannel({ name: '', description: '', visibility: 'public', rules: '', image: '' });
+        fetchChannels();
+        alert('Channel created successfully!');
+      }
+    } catch (err) {
+      setChannelError(err.response?.data?.message || 'Failed to create channel');
+    } finally {
+      setChannelLoading(false);
+    }
+  };
+
+  const handleDeleteChannel = async (channelId) => {
+    if (!window.confirm('Are you sure you want to delete this channel?')) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`${API_BASE_URL}/channels/${channelId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchChannels();
+      alert('Channel deleted successfully!');
+    } catch (err) {
+      alert('Failed to delete channel');
+    }
+  };
+
+  // Simulate real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
-      // Randomly update active reports (+1 or -1)
       if (Math.random() > 0.7) {
         setStats(prev => ({
           ...prev,
@@ -32,13 +120,21 @@ const Admin = () => {
     alert(`Reviewing report: ${reportId}\n\nActions available:\n- Approve\n- Reject\n- Take action\n- Request more info`);
   };
 
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
   return (
     <div className="admin-wrapper">
       <div className="admin-container">
         {/* Sidebar */}
         <aside className="admin-sidebar">
           <div className="admin-logo">
-            <span>🛡️</span>
+            <FiShield size={24} />
             <span>Admin Portal</span>
           </div>
 
@@ -47,28 +143,28 @@ const Admin = () => {
               className={`admin-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
               onClick={() => setActiveTab('dashboard')}
             >
-              <span>📊</span>
+              <FiGrid />
               <span>Dashboard</span>
             </div>
             <div
               className={`admin-nav-item ${activeTab === 'users' ? 'active' : ''}`}
               onClick={() => setActiveTab('users')}
             >
-              <span>👥</span>
+              <FiUsers />
               <span>Users</span>
             </div>
             <div
               className={`admin-nav-item ${activeTab === 'channels' ? 'active' : ''}`}
               onClick={() => setActiveTab('channels')}
             >
-              <span>📺</span>
+              <FiHash />
               <span>Channels</span>
             </div>
             <div
               className={`admin-nav-item ${activeTab === 'reports' ? 'active' : ''}`}
               onClick={() => setActiveTab('reports')}
             >
-              <span>💬</span>
+              <FiMessageCircle />
               <span>Reports</span>
             </div>
 
@@ -78,22 +174,21 @@ const Admin = () => {
               className={`admin-nav-item ${activeTab === 'moderation' ? 'active' : ''}`}
               onClick={() => setActiveTab('moderation')}
             >
-              <span>🛡️</span>
+              <FiShield />
               <span>Moderation</span>
             </div>
-            {/* Adding Queue Item as requested */}
             <div
               className={`admin-nav-item ${activeTab === 'queue' ? 'active' : ''}`}
               onClick={() => setActiveTab('queue')}
             >
-              <span>📋</span>
+              <FiList />
               <span>Queue</span>
             </div>
             <div
               className={`admin-nav-item ${activeTab === 'blocked' ? 'active' : ''}`}
               onClick={() => setActiveTab('blocked')}
             >
-              <span>🚫</span>
+              <FiSlash />
               <span>Blocked Accounts</span>
             </div>
 
@@ -103,7 +198,7 @@ const Admin = () => {
               className={`admin-nav-item ${activeTab === 'security' ? 'active' : ''}`}
               onClick={() => setActiveTab('security')}
             >
-              <span>🔐</span>
+              <FiLock />
               <span>Security</span>
             </div>
 
@@ -111,7 +206,7 @@ const Admin = () => {
               className={`admin-nav-item ${activeTab === 'server' ? 'active' : ''}`}
               onClick={() => setActiveTab('server')}
             >
-              <span>🖥️</span>
+              <FiServer />
               <span>Server Info</span>
             </div>
           </nav>
@@ -131,48 +226,48 @@ const Admin = () => {
               <div className="dashboard-grid">
                 <div className="stat-card">
                   <div className="stat-header">
-                    <span>👥</span>
+                    <FiUsers />
                     <span>Total Users</span>
                   </div>
                   <div className="stat-value">{stats.users.toLocaleString()}</div>
                   <div className="stat-trend trend-up">
-                    <span>↑</span>
+                    <FiTrendingUp />
                     <span>12% from last month</span>
                   </div>
                 </div>
 
                 <div className="stat-card">
                   <div className="stat-header">
-                    <span>📝</span>
+                    <FiFileText />
                     <span>Posts Today</span>
                   </div>
                   <div className="stat-value">{stats.posts.toLocaleString()}</div>
                   <div className="stat-trend trend-up">
-                    <span>↑</span>
+                    <FiTrendingUp />
                     <span>8% from yesterday</span>
                   </div>
                 </div>
 
                 <div className="stat-card">
                   <div className="stat-header">
-                    <span>💬</span>
+                    <FiMessageCircle />
                     <span>Active Reports</span>
                   </div>
                   <div className="stat-value">{stats.reports}</div>
                   <div className="stat-trend trend-down">
-                    <span>↓</span>
+                    <FiTrendingDown />
                     <span>15% from last week</span>
                   </div>
                 </div>
 
                 <div className="stat-card">
                   <div className="stat-header">
-                    <span>📈</span>
+                    <FiActivity />
                     <span>Engagement Rate</span>
                   </div>
                   <div className="stat-value">{stats.engagement}%</div>
                   <div className="stat-trend trend-up">
-                    <span>↑</span>
+                    <FiTrendingUp />
                     <span>5% improvement</span>
                   </div>
                 </div>
@@ -278,7 +373,7 @@ const Admin = () => {
             <div className="admin-section">
               <div className="section-header">
                 <h2 className="section-h2">All Channels</h2>
-                <button className="primary-btn">Create New Channel</button>
+                <button className="primary-btn" onClick={() => setShowCreateModal(true)}>Create New Channel</button>
               </div>
               <table className="admin-table">
                 <thead>
@@ -292,41 +387,108 @@ const Admin = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>#general</td>
-                    <td>Public</td>
-                    <td>12,459</td>
-                    <td>Jan 12, 2023</td>
-                    <td><span className="status-badge status-active">Active</span></td>
-                    <td>
-                      <div style={{ display: 'flex', gap: '5px' }}>
-                        <button className="action-btn-sm">Edit</button>
-                        <button className="action-btn-sm" style={{ color: '#ef4444', borderColor: '#fee2e2' }}>Archive</button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>#announcements</td>
-                    <td>Public (ReadOnly)</td>
-                    <td>12,459</td>
-                    <td>Jan 12, 2023</td>
-                    <td><span className="status-badge status-active">Active</span></td>
-                    <td><button className="action-btn-sm">Edit</button></td>
-                  </tr>
-                  <tr>
-                    <td>#dev-team</td>
-                    <td>Private</td>
-                    <td>45</td>
-                    <td>Feb 05, 2023</td>
-                    <td><span className="status-badge status-active">Active</span></td>
-                    <td><button className="action-btn-sm">Edit</button></td>
-                  </tr>
+                  {channels.length > 0 ? (
+                    channels.map(channel => (
+                      <tr key={channel._id}>
+                        <td>#{channel.name}</td>
+                        <td>{channel.visibility === 'public' ? 'Public' : 'Private'}</td>
+                        <td>{channel.followersCount || 0}</td>
+                        <td>{formatDate(channel.createdAt)}</td>
+                        <td><span className="status-badge status-active">Active</span></td>
+                        <td>
+                          <div style={{ display: 'flex', gap: '5px' }}>
+                            <button className="action-btn-sm"><FiEdit2 size={14} /></button>
+                            <button
+                              className="action-btn-sm"
+                              style={{ color: '#ef4444', borderColor: '#fee2e2' }}
+                              onClick={() => handleDeleteChannel(channel._id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: 'center', color: '#9ca3af' }}>
+                        No channels found. Create one to get started!
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
           )}
 
-          {/* New Queue Tab Content - Reusing the Moderation Queue table logic */}
+          {/* Create Channel Modal */}
+          {showCreateModal && (
+            <div className="modal-overlay" onClick={() => setShowCreateModal(false)}>
+              <div className="modal-content" onClick={e => e.stopPropagation()}>
+                <h2>Create New Channel</h2>
+                {channelError && <p className="error-text">{channelError}</p>}
+                <form onSubmit={handleCreateChannel}>
+                  <div className="form-group">
+                    <label>Channel Name</label>
+                    <input
+                      type="text"
+                      value={newChannel.name}
+                      onChange={e => setNewChannel({ ...newChannel, name: e.target.value })}
+                      placeholder="e.g., recipes, announcements"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Description</label>
+                    <textarea
+                      value={newChannel.description}
+                      onChange={e => setNewChannel({ ...newChannel, description: e.target.value })}
+                      placeholder="What is this channel about?"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Visibility</label>
+                    <select
+                      value={newChannel.visibility}
+                      onChange={e => setNewChannel({ ...newChannel, visibility: e.target.value })}
+                    >
+                      <option value="public">Public</option>
+                      <option value="private">Private</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Rules (comma-separated)</label>
+                    <input
+                      type="text"
+                      value={newChannel.rules}
+                      onChange={e => setNewChannel({ ...newChannel, rules: e.target.value })}
+                      placeholder="Be respectful, No spam, Stay on topic"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Image URL (optional)</label>
+                    <input
+                      type="text"
+                      value={newChannel.image}
+                      onChange={e => setNewChannel({ ...newChannel, image: e.target.value })}
+                      placeholder="https://example.com/image.jpg"
+                    />
+                  </div>
+                  <div className="modal-actions">
+                    <button type="button" className="action-btn-sm" onClick={() => setShowCreateModal(false)}>
+                      Cancel
+                    </button>
+                    <button type="submit" className="primary-btn" disabled={channelLoading}>
+                      {channelLoading ? 'Creating...' : 'Create Channel'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          {/* Queue Tab */}
           {activeTab === 'queue' && (
             <section className="admin-section">
               <div className="section-header">
@@ -381,7 +543,7 @@ const Admin = () => {
                 <div className="server-info-content">
                   <h3 style={{ fontSize: '12px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.05em' }}>Server Name</h3>
                   <div style={{ fontSize: '18px', fontWeight: '600', color: '#111827', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontSize: '24px' }}>🖥️</span>
+                    <FiServer size={24} />
                     <span>Connected Main Server</span>
                   </div>
                 </div>
