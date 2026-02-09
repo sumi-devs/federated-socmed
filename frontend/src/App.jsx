@@ -6,6 +6,8 @@ import Channels from './components/HomePage-components/Channels';
 import ServerDetails from './components/HomePage-components/ServerDetails';
 import Settings from './components/HomePage-components/Settings';
 import LandingPage from './pages/LandingPage';
+import ServerHome from './pages/serverhome';
+import Admin from './pages/Admin';
 import './styles/app.css';
 
 const isAuthenticated = () => {
@@ -60,6 +62,12 @@ function App() {
                 </ProtectedRoute>
             } />
             <Route path="/landing" element={<LandingPage />} />
+            <Route path="/servers" element={<ServerHome />} />
+            <Route path="/admin" element={
+                <ProtectedRoute>
+                    <Admin />
+                </ProtectedRoute>
+            } />
         </Routes>
     );
 }

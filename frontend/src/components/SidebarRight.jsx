@@ -44,7 +44,7 @@ const SidebarRight = () => {
       </div>
 
       <div className="widget">
-        <h3>Channels</h3>
+        <h3>Channels You Follow</h3>
 
         <div className="chat-item">
           <div className="chat-avatar">

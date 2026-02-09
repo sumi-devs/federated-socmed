@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../../Images/Logo.png';
 
@@ -62,11 +63,12 @@ const NavItem = styled.li`
   }
 `;
 
-const ActionButton = styled.button`
+const ActionButton = styled(Link)`
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+  text-decoration: none;
 
   background-color: ${({ $isScrolled }) =>
     $isScrolled ? DARK_BLUE : 'transparent'};
@@ -76,7 +78,7 @@ const ActionButton = styled.button`
 
   border: 2px solid
     ${({ $isScrolled }) =>
-      $isScrolled ? DARK_BLUE : WHITE};
+    $isScrolled ? DARK_BLUE : WHITE};
 
   transition:
     background-color 0.3s ease,
@@ -85,9 +87,9 @@ const ActionButton = styled.button`
 
   &:hover {
     background-color: ${({ $isScrolled }) =>
-      $isScrolled ? '#3f38bc' : WHITE};
+    $isScrolled ? '#3f38bc' : WHITE};
     color: ${({ $isScrolled }) =>
-      $isScrolled ? WHITE : DARK_BLUE};
+    $isScrolled ? WHITE : DARK_BLUE};
   }
 `;
 
@@ -110,11 +112,10 @@ const NavBar = () => {
 
       <NavLinks>
         <NavItem><a href="#home">Home</a></NavItem>
-        <NavItem><a href="#explore">Explore</a></NavItem>
-        <NavItem><a href="#community">Community</a></NavItem>
+        <NavItem><Link to="/servers">Community</Link></NavItem>
       </NavLinks>
 
-      <ActionButton $isScrolled={isScrolled}>
+      <ActionButton to="/auth" $isScrolled={isScrolled}>
         Get Started
       </ActionButton>
     </NavContainer>
@@ -122,3 +123,4 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
