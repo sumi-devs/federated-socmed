@@ -15,6 +15,11 @@ const postSchema = new mongoose.Schema(
       default: null
     },
 
+    isEditable: {
+      type: Boolean,
+      default: true
+    },
+
     /* ========= POST TYPE ========= */
 
     isUserPost: {
@@ -114,6 +119,15 @@ const postSchema = new mongoose.Schema(
           createdAt: {
             type: Date,
             default: Date.now
+          },
+          commentFederatedId: {
+            type: String,
+            required: true
+          },
+
+          originServer: {
+            type: String,
+            required: true
           }
         }
       ],

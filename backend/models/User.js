@@ -51,8 +51,7 @@ const userSchema = new mongoose.Schema(
 
     serverName: {
       type: String,
-      required: true,
-      enum: ["sports", "food"]
+      required: true
     },
 
     federatedId: {
@@ -96,7 +95,21 @@ const userSchema = new mongoose.Schema(
     lastLoginAt: {
       type: Date,
       default: null
+    },
+
+    /* ===== FEDERATION ===== */
+
+    originServer: {
+      type: String,
+      required: true,
+      immutable: true
+    },
+
+    isRemote: {
+      type: Boolean,
+      default: false
     }
+
   },
   { timestamps: true }
 );

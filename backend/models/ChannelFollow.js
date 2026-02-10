@@ -20,6 +20,16 @@ const channelFollowSchema = new mongoose.Schema(
     serverName: {
       type: String,
       required: true
+    },
+
+    userOriginServer: {
+      type: String,
+      required: true
+    },
+
+    channelOriginServer: {
+      type: String,
+      required: true
     }
   },
   { timestamps: true }

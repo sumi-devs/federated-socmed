@@ -15,6 +15,18 @@ const userFollowSchema = new mongoose.Schema(
     serverName: {
       type: String,
       required: true
+    },
+
+    /* ===== FEDERATION ===== */
+
+    followerOriginServer: {
+      type: String,
+      required: true
+    },
+
+    followingOriginServer: {
+      type: String,
+      required: true
     }
   },
   { timestamps: true }

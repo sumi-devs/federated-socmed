@@ -7,7 +7,6 @@ const channelSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
       lowercase: true,
       immutable: true
@@ -57,7 +56,8 @@ const channelSchema = new mongoose.Schema(
 
     originServer: {
       type: String,
-      required: true
+      required: true,
+      immutable: true
     },
 
     serverName: {
