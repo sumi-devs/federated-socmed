@@ -12,12 +12,17 @@ export const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    if (decoded.serverName !== process.env.SERVER_NAME) {
+      return res.status(401).json({ message: "Invalid token origin" });
+    }
+
     req.user = {
+      userId: decoded.userId,
       federatedId: decoded.federatedId,
       displayName: decoded.displayName,
-      server: decoded.serverName,
+      serverName: decoded.serverName,
+      role: decoded.role,
       image: decoded.image,
-      role: decoded.role
     };
     next();
   } catch (err) {

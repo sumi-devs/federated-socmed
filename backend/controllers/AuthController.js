@@ -12,6 +12,7 @@ export const loginUser = async (req, res, next) => {
 
     const user = await User.findOne({
       serverName: process.env.SERVER_NAME,
+      isRemote: false,
       $or: [{ displayName }, { email }]
     });
 
@@ -27,12 +28,11 @@ export const loginUser = async (req, res, next) => {
     const token = jwt.sign(
       {
         userId: user._id,
-        server: process.env.SERVER_NAME,
         role: user.role,
         serverName: user.serverName,
         federatedId: user.federatedId,
         displayName: user.displayName,
-        image: user.image
+        image: user.avatarUrl
       },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
@@ -44,7 +44,7 @@ export const loginUser = async (req, res, next) => {
       user: {
         id: user._id,
         displayName: user.displayName,
-        image: user.image,
+        image: user.avatarUrl,
         email: user.email,
         role: user.role,
         federatedId: user.federatedId,
@@ -59,7 +59,7 @@ export const loginUser = async (req, res, next) => {
 export const registerUser = async (req, res, next) => {
   try {
     const {
-      displayName, firstName, middleName, lastName, dob, email, password } = req.body;
+      displayName, firstName, lastName, dob, email, password } = req.body;
 
     if (
       !displayName || !firstName || !lastName || !dob || !email || !password
@@ -88,6 +88,8 @@ export const registerUser = async (req, res, next) => {
       email,
       password: hashedPassword,
       serverName: process.env.SERVER_NAME,
+      originServer: process.env.SERVER_NAME,
+      isRemote: false,
       federatedId
     });
 
@@ -96,7 +98,6 @@ export const registerUser = async (req, res, next) => {
     const token = jwt.sign(
       {
         userId: newUser._id,
-        server: process.env.SERVER_NAME,
         role: newUser.role,
         serverName: newUser.serverName,
         federatedId: newUser.federatedId,

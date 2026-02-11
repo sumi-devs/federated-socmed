@@ -10,7 +10,7 @@ export const createChannel = async (req, res, next) => {
             return next(createError(400, "Missing required fields: name, description, and rules are required"));
         }
 
-        const federatedId = `${name}@${req.user.server}`;
+        const federatedId = `${name}@${req.user.serverName}`;
         const createdBy = req.user.federatedId;
         const newChannel = new Channel({
             name,
@@ -19,8 +19,8 @@ export const createChannel = async (req, res, next) => {
             visibility,
             image: image || null,
             federatedId,
-            originServer: req.user.server,
-            serverName: req.user.server,
+            originServer: req.user.serverName,
+            serverName: req.user.serverName,
             createdBy: createdBy,
             followersCount: 0
         });
@@ -43,7 +43,15 @@ export const deleteChannel = async (req, res, next) => {
         if (!channel) {
             return next(createError(404, "Channel not found"));
         }
-
+        if (channel.isRemote) {
+            return next(createError(403, "Cannot delete remote channel"));
+        }
+        if (
+            channel.createdBy !== req.user.federatedId &&
+            req.user.role !== "admin"
+        ) {
+            return next(createError(403, "Unauthorized action"));
+        }
         await Channel.findByIdAndDelete(ChannelId);
         res.status(200).json({
             success: true,
@@ -57,7 +65,10 @@ export const deleteChannel = async (req, res, next) => {
 export const getChannel = async (req, res, next) => {
     try {
         const channelName = req.params.channelName;
-        const channel = await Channel.findOne({ name: channelName });
+        const channel = await Channel.findOne({
+            name: channelName,
+            serverName: req.user.serverName
+            });
         if (!channel) {
             return next(createError(404, "Channel not found"));
         }
@@ -90,9 +101,15 @@ export const updateChannelDescription = async (req, res, next) => {
         if (!description) {
             return next(createError(400, "Description is required"));
         }
-        const channel = await Channel.findOne({ name: channelName });
+        const channel = await Channel.findOne({
+            name: channelName,
+            serverName: req.user.serverName
+        });
         if (!channel) {
             return next(createError(404, "Channel not found"));
+        }
+        if (channel.isRemote) {
+            return next(createError(403, "Cannot modify remote channel"));
         }
         channel.description = description;
         const updatedChannel = await channel.save();
@@ -112,9 +129,12 @@ export const updateChannelImage = async (req, res, next) => {
         if (!image) {
             return next(createError(400, "Image is required"));
         }
-        const channel = await Channel.findOne({ name: channelName });
+        const channel = await Channel.findOne({ name: channelName, serverName: req.user.serverName });
         if (!channel) {
             return next(createError(404, "Channel not found"));
+        }
+        if (channel.isRemote) {
+            return next(createError(403, "Cannot modify remote channel"));
         }
         channel.image = image;
         const updatedChannel = await channel.save();
@@ -134,9 +154,15 @@ export const updateChannelRules = async (req, res, next) => {
         if (!rules || !Array.isArray(rules)) {
             return next(createError(400, "Rules must be an array"));
         }
-        const channel = await Channel.findOne({ name: channelName });
+        const channel = await Channel.findOne({
+            name: channelName,
+            serverName: req.user.serverName
+        });
         if (!channel) {
             return next(createError(404, "Channel not found"));
+        }
+        if (channel.isRemote) {
+            return next(createError(403, "Cannot modify remote channel"));
         }
         channel.rules = rules;
         const updatedChannel = await channel.save();
@@ -154,9 +180,12 @@ export const updateChannelRules = async (req, res, next) => {
 export const followChannel = async (req, res, next) => {
     try {
         const channelName = req.params.channelName;
-        const channel = await Channel.findOne({ name: channelName });
+        const channel = await Channel.findOne({ name: channelName, serverName: req.user.serverName });
         if (!channel) {
             return next(createError(404, "Channel not found"));
+        }
+        if (channel.isRemote) {
+            return next(createError(403, "Cannot modify remote channel"));
         }
         const userFederatedId = req.user.federatedId;
         const existingFollow = await ChannelFollow.findOne({ userFederatedId: userFederatedId, channelFederatedId: channel.federatedId });
@@ -167,7 +196,9 @@ export const followChannel = async (req, res, next) => {
             userFederatedId: userFederatedId,
             channelFederatedId: channel.federatedId,
             channelName: channel.name,
-            serverName: channel.serverName
+            serverName: channel.serverName,
+            userOriginServer: req.user.serverName,
+            channelOriginServer: channel.originServer
         });
         await newFollow.save();
         channel.followersCount += 1;
@@ -183,9 +214,12 @@ export const followChannel = async (req, res, next) => {
 
 export const unFollowChannel = async (req, res, next) => {
     const channelName = req.params.channelName;
-    const channel = await Channel.findOne({ name: channelName });
+    const channel = await Channel.findOne({ name: channelName , serverName: req.user.serverName });
     if (!channel) {
         return next(createError(404, "Channel not found"));
+    }
+    if (channel.isRemote) {
+        return next(createError(403, "Cannot modify remote channel"));
     }
     const userFederatedId = req.user.federatedId;
     const existingFollow = await ChannelFollow.findOneAndDelete({ userFederatedId: userFederatedId, channelFederatedId: channel.federatedId });
@@ -202,7 +236,7 @@ export const unFollowChannel = async (req, res, next) => {
 
 export const checkFollowStatus = async (req, res, next) => {
     const channelName = req.params.channelName;
-    const channel = await Channel.findOne({ name: channelName });
+    const channel = await Channel.findOne({ name: channelName, serverName: req.user.serverName });
     if (!channel) {
         return next(createError(404, "Channel not found"));
     }
@@ -217,10 +251,11 @@ export const checkFollowStatus = async (req, res, next) => {
 
 export const getChannelFollowers = async (req, res, next) => {
     const channelName = req.params.channelName;
-    const channel = await Channel.findOne({ name: channelName });
+    const channel = await Channel.findOne({ name: channelName, serverName: req.user.serverName });
     if (!channel) {
         return next(createError(404, "Channel not found"));
     }
+
     const followers = await ChannelFollow.find({ channelFederatedId: channel.federatedId });
     res.status(200).json({
         success: true,

@@ -20,9 +20,18 @@ export const createPost = async (req, res, next) => {
         return next(createError(400, "Channel name is required for channel posts"));
       }
 
-      channel = await Channel.findOne({ name: channelName });
+      channel = await Channel.findOne({
+        name: channelName,
+        serverName: req.user.serverName
+      });
+
+
       if (!channel) {
         return next(createError(404, "Channel not found"));
+      }
+
+      if (channel.isRemote) {
+        return next(createError(403, "Cannot post directly to a remote channel"));
       }
 
       // Enforce visibility rules
@@ -38,7 +47,7 @@ export const createPost = async (req, res, next) => {
     // ===== FEDERATED ID =====
     let postFederatedId;
     if (isChannelPost) {
-      postFederatedId = `${channelName}@${req.user.server}/post/${Date.now()}`;
+      postFederatedId = `${channelName}@${req.user.serverName}/post/${Date.now()}`;
     } else {
       postFederatedId = `${req.user.federatedId}/post/${Date.now()}`;
     }
@@ -55,8 +64,8 @@ export const createPost = async (req, res, next) => {
       channelName: isChannelPost ? channelName : null,
 
       federatedId: postFederatedId,
-      originServer: req.user.server,
-      serverName: req.user.server,
+      originServer: req.user.serverName,
+      serverName: req.user.serverName,
 
       isRemote: false,
       federationStatus: "local",
@@ -82,6 +91,17 @@ export const deletePost = async (req, res, next) => {
     if (!post) {
       return next(createError(404, "Post not found"));
     }
+    if (post.isRemote) {
+      return next(createError(403, "Cannot modify remote content"));
+    }
+
+    if (
+      post.userDisplayName !== req.user.displayName &&
+      req.user.role !== "admin"
+    ) {
+      return next(createError(403, "Unauthorized action"));
+    }
+      
     await Post.findByIdAndDelete(postId);
     res.status(200).json({
       success: true,
@@ -102,6 +122,10 @@ export const likePost = async (req, res, next) => {
       return next(createError(404, "Post not found"));
     }
 
+    if (post.isRemote) {
+  // Forward to origin server instead of modifying locally
+      return next(createError(403, "Remote like forwarding not implemented yet"));
+    }
     const alreadyLiked = post.likedBy.includes(userId);
 
     if (alreadyLiked) {
@@ -151,10 +175,17 @@ export const createComment = async (req, res, next) => {
       return next(createError(404, "Post not found"));
     }
 
+    //Later to be Changed - For now, we are not allowing commenting on remote posts until we implement comment forwarding
+    if (post.isRemote) {
+      return next(createError(403, "Remote comment forwarding not implemented yet"));
+    }
+
     const newComment = {
       displayName: req.user.displayName,
       image: req.user.image || null,
-      content: content.trim()
+      content: content.trim(),
+      commentFederatedId: `${req.user.federatedId}/comment/${Date.now()}`,
+      originServer: req.user.serverName
     };
 
     console.log(req.user);
