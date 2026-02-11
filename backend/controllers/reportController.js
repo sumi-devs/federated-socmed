@@ -1,6 +1,8 @@
 import Report from "../models/Report.js";
 import { createError } from "../utils/error.js";
 
+//remote Forwarding required to be implemented
+    
 export const createReport = async (req, res, next) => {
     try {
         const reporterId = req.user.federatedId;
@@ -11,12 +13,29 @@ export const createReport = async (req, res, next) => {
             return next(createError(400, "Missing required fields"));
         }
 
+        if (!["user", "post"].includes(targetType)) {
+            return next(createError(400, "Invalid target type"));
+        }
+
+        const parts = reportedId.split("@");
+
+        if (parts.length < 2) {
+        return next(createError(400, "Invalid reportedId format"));
+        }
+
+        const afterAt = parts[1]; // food/post/1770468129231
+        const originServer = afterAt.split("/")[0]; // food
+
+        const isRemoteTarget = originServer !== process.env.SERVER_NAME;
+
         const newReport = new Report({
-            reporterId: reporterId,
-            reportedId: reportedId,
-            targetType : targetType,
-            reason : reason,
-            description : description
+            reporterId,
+            reportedId,
+            targetType,
+            reason,
+            description,
+            targetOriginServer: originServer,
+            isRemoteTarget
         });
         const savedReport = await newReport.save();
         res.status(201).json(savedReport);
