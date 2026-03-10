@@ -329,8 +329,12 @@ function UserProfile() {
                                 <p className="username">@{userProfile.displayName}</p>
                                 <p className="bio">{userProfile.federatedId}</p>
                                 <div className="profile-meta">
-                                    <span><FiCalendar /> Joined {formatDate(userProfile.createdAt)}</span>
-                                    <span><FiMapPin /> {userProfile.originServer || userProfile.serverName}</span>
+                                    <span>
+                                        <FiCalendar /> Joined {userProfile.createdAt ? new Date(userProfile.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Unknown'}
+                                    </span>
+                                    <span>
+                                        <FiMapPin /> {userProfile.originServer || userProfile.serverName || 'Unknown server'}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -363,6 +367,7 @@ function UserProfile() {
                                 onLike={handleLikePost}
                                 activeTimeline="profile"
                                 onDeletePost={(postId) => setPosts(posts.filter(p => p._id !== postId))}
+                                onRepostSuccess={(newPost) => setPosts([newPost, ...posts])}
                             />
                         )}
                     </div>

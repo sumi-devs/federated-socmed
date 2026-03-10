@@ -158,6 +158,7 @@ function Home() {
           onLike={handleLikePost}
           activeTimeline={activeTimeline}
           onDeletePost={handleDeletePost}
+          onRepostSuccess={handlePostCreated}
           onFollowChanged={fetchFollowingPosts}
           onMuteUser={handleMuteUser}
         />
