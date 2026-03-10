@@ -5,10 +5,10 @@ import PostCreator from '../components/PostCreator';
 import PostList from '../components/PostList';
 import { FiHash, FiLock, FiUsers } from 'react-icons/fi';
 import '../styles/ChannelPage.css';
-
-const API_BASE_URL = "http://localhost:5000/api";
+import { getApiBaseUrl } from '../apiConfig';
 
 const ChannelPage = () => {
+  const API_BASE_URL = getApiBaseUrl();
   const { channelName } = useParams();
   const decodedChannelName = decodeURIComponent(channelName || '');
 

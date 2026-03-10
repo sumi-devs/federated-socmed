@@ -8,9 +8,10 @@ import {
 } from 'react-icons/fi';
 import '../styles/Admin.css';
 
-const API_BASE_URL = "http://localhost:5000/api";
+import { getApiBaseUrl } from '../apiConfig';
 
 const Admin = () => {
+  const API_BASE_URL = getApiBaseUrl();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [stats, setStats] = useState({
@@ -239,12 +240,11 @@ const Admin = () => {
     }
   };
 
-<<<<<<< HEAD
   const openCreateServerModal = () => {
     setEditingServer(null);
     setServerFormData({ name: '', description: '', url: '', category: 'general' });
     setServerModalOpen(true);
-  };
+  };  // <-- this closing brace was missing
 
   const openEditServerModal = (server) => {
     setEditingServer(server);
@@ -294,8 +294,6 @@ const Admin = () => {
       alert('Failed to delete server.');
     }
   };
-=======
->>>>>>> 0f41043a0c0e076ff3629fb87a9ab30b8a31cbef
 
   const reviewReport = async (reportId, action) => {
     if (!action) {

@@ -7,9 +7,10 @@ import {
   FiX
 } from 'react-icons/fi';
 
-const API_BASE_URL = "http://localhost:5000/api";
+import { getApiBaseUrl } from '../apiConfig';
 
 const PostCreator = ({ onPostCreated, isChannelPost = false, channelName = null }) => {
+  const API_BASE_URL = getApiBaseUrl();
   const [postContent, setPostContent] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -18,7 +19,7 @@ const PostCreator = ({ onPostCreated, isChannelPost = false, channelName = null 
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const emojis = ['😀','😂','😍','👍','🔥','🎉','🙏','🏆','🍕','⚽'];
+  const emojis = ['😀', '😂', '😍', '👍', '🔥', '🎉', '🙏', '🏆', '🍕', '⚽'];
 
   const handleImageClick = () => {
     fileInputRef.current.click();

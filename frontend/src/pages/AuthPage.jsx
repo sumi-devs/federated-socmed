@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import bg from "../Images/Image7.jpg";
 
-const API_BASE_URL = "http://localhost:5000/api";
+import { getApiBaseUrl } from '../apiConfig';
 
 const PageContainer = styled.div`
   width: 100%;
@@ -110,6 +110,24 @@ const Input = styled.input`
   }
 `;
 
+const CheckboxRow = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 4px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  user-select: none;
+
+  input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    accent-color: #2563eb;
+    cursor: pointer;
+  }
+`;
+
 const Button = styled.button`
   background-color: #2563eb;
   color: white;
@@ -165,6 +183,7 @@ const AuthPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
   // Login form state
   const [loginData, setLoginData] = useState({
@@ -198,10 +217,12 @@ const AuthPage = () => {
     setError("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+      const apiBase = getApiBaseUrl();
+      const res = await fetch(`${apiBase}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginData)
+        credentials: "include",   // needed so the httpOnly cookie is stored
+        body: JSON.stringify({ ...loginData, rememberMe })
       });
 
       const data = await res.json();
@@ -228,9 +249,11 @@ const AuthPage = () => {
     setError("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/register`, {
+      const apiBase = getApiBaseUrl();
+      const res = await fetch(`${apiBase}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(signupData)
       });
 
@@ -338,6 +361,14 @@ const AuthPage = () => {
               onChange={handleLoginChange}
               required
             />
+            <CheckboxRow>
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              Stay logged in for 15 days
+            </CheckboxRow>
             {error && !isSignUp && <ErrorMessage>{error}</ErrorMessage>}
             {success && !isSignUp && <SuccessMessage>{success}</SuccessMessage>}
             <Button

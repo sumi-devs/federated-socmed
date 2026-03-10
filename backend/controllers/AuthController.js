@@ -1,11 +1,11 @@
-import User from "../models/User.js";
+ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { createError } from "../utils/error.js";
 
 export const loginUser = async (req, res, next) => {
   try {
-    const { displayName, email, password } = req.body;
+    const { displayName, email, password, rememberMe } = req.body;
     if ((!displayName && !email) || !password) {
       return next(createError(400, "Missing credentials"));
     }
@@ -24,6 +24,9 @@ export const loginUser = async (req, res, next) => {
       return next(createError(401, "Invalid credentials"));
     }
 
+    // If rememberMe is true the session lasts 15 days, otherwise use the default
+    const tokenExpiry = rememberMe ? "15d" : (process.env.JWT_EXPIRES_IN || "1d");
+
     const token = jwt.sign(
       {
         userId: user._id,
@@ -35,8 +38,19 @@ export const loginUser = async (req, res, next) => {
         image: user.image
       },
       process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN }
+      { expiresIn: tokenExpiry }
     );
+
+    // If the user opted in to "stay logged in", set an httpOnly cookie
+    // so the token persists across browser sessions without JS access.
+    if (rememberMe) {
+      res.cookie("token", token, {
+        httpOnly: true,          // not readable by JS – protects against XSS
+        secure: process.env.NODE_ENV === "production", // HTTPS only in prod
+        sameSite: "lax",
+        maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in ms
+      });
+    }
 
     res.status(200).json({
       success: true,

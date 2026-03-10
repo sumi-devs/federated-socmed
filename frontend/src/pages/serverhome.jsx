@@ -5,6 +5,8 @@ import ServerHeader from '../components/ServerHeader';
 import ServerList from '../components/ServerList';
 import { servers as staticServers, categories as initialCategories } from '../data/data';
 
+import { getApiBaseUrl } from '../apiConfig';
+
 const pageStyles = {
     '--bg-main': '#17171c',
     '--bg-card': 'rgba(255,255,255,0.05)',
@@ -28,7 +30,8 @@ function Home() {
     useEffect(() => {
         const fetchServers = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/servers');
+                const apiBase = getApiBaseUrl();
+                const res = await axios.get(`${apiBase}/servers`);
                 if (res.data && res.data.servers) {
                     const mappedServers = res.data.servers.map(server => ({
                         id: server._id,

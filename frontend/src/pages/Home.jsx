@@ -3,11 +3,11 @@ import TimelineTabs from '../components/TimelineTabs';
 import PostCreator from '../components/PostCreator';
 import PostList from '../components/PostList';
 import Layout from '../components/Layout';
+import { getApiBaseUrl } from '../apiConfig';
 import '../styles/Home.css';
 
-const API_BASE_URL = "http://localhost:5000/api";
-
 function Home() {
+  const API_BASE_URL = getApiBaseUrl();
   const [activeTimeline, setActiveTimeline] = useState('home');
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);

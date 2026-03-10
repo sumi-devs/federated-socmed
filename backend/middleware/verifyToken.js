@@ -1,13 +1,22 @@
 import jwt from "jsonwebtoken";
 
 export const verifyToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  let token = null;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Authentication failed" });
+  // 1. Try Bearer token from Authorization header (primary – used by API clients)
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    token = authHeader.split(" ")[1];
   }
 
-  const token = authHeader.split(" ")[1];
+  // 2. Fall back to httpOnly cookie (set when "Stay logged in" was checked)
+  if (!token && req.cookies && req.cookies.token) {
+    token = req.cookies.token;
+  }
+
+  if (!token) {
+    return res.status(401).json({ message: "Authentication failed" });
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -24,3 +33,4 @@ export const verifyToken = (req, res, next) => {
     return res.status(401).json({ message: "Authentication failed" });
   }
 };
+

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FiThumbsUp, FiMessageCircle, FiShare2, FiMoreHorizontal, FiTrash2 } from 'react-icons/fi';
 
-const API_BASE_URL = "http://localhost:5000/api";
+import { getApiBaseUrl } from '../apiConfig';
 
 const PostList = ({ posts, onLike, activeTimeline, onDeletePost }) => {
+  const API_BASE_URL = getApiBaseUrl();
   const [openMenuId, setOpenMenuId] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const menuRef = useRef(null);

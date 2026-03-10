@@ -4,10 +4,10 @@ import Layout from '../Layout';
 import { FiHash, FiLock, FiUsers } from 'react-icons/fi';
 import axios from 'axios';
 import '../../styles/Channels.css';
-
-const API_BASE_URL = 'http://localhost:5000/api';
+import { getApiBaseUrl } from '../../apiConfig';
 
 function Channels() {
+  const API_BASE_URL = getApiBaseUrl();
   const [channels, setChannels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -62,7 +62,7 @@ function Channels() {
     fetchChannels();
   }, [fetchChannels]);
 
-  
+
 
   const toggleRequest = (channelName) => {
     setRequestedChannels(prev => {
@@ -175,9 +175,9 @@ function Channels() {
               }}
             >
               {f === 'all' ? 'All' :
-               f === 'public' ? 'Public' :
-               f === 'joined' ? 'Joined' :
-               f === 'private' ? 'Private' : 'Read‑only'}
+                f === 'public' ? 'Public' :
+                  f === 'joined' ? 'Joined' :
+                    f === 'private' ? 'Private' : 'Read‑only'}
             </button>
           ))}
         </div>

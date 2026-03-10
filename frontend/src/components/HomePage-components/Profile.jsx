@@ -3,10 +3,10 @@ import Layout from '../Layout';
 import PostList from '../PostList';
 import { FiMapPin, FiCalendar, FiMail } from 'react-icons/fi';
 import '../../styles/Profile.css';
-
-const API_BASE_URL = "http://localhost:5000/api";
+import { getApiBaseUrl } from '../../apiConfig';
 
 function Profile() {
+  const API_BASE_URL = getApiBaseUrl();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
