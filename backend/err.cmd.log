@@ -1,0 +1,38 @@
+[dotenv@17.2.3] injecting env (6) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+Starting connection to: No URL found
+[BACKEND] Initializing at 2026-03-09T16:37:08.571Z
+[BACKEND] Mode: development
+[SERVER] Success: Listening on http://0.0.0.0:5000
+[SERVER] Error starting on port: 5000 listen EADDRINUSE: address already in use 0.0.0.0:5000
+Error connecting to MongoDB: MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017
+    at _handleConnectionErrors (R:\ragul\federated-socmed-feature-admin-dashboard-browser\federated-socmed-feature-admin-dashboard-browser\backend\node_modules\mongoose\lib\connection.js:1169:11)
+    at NativeConnection.openUri (R:\ragul\federated-socmed-feature-admin-dashboard-browser\federated-socmed-feature-admin-dashboard-browser\backend\node_modules\mongoose\lib\connection.js:1100:11) {
+  errorLabelSet: Set(0) {},
+  reason: TopologyDescription {
+    type: 'Unknown',
+    servers: Map(1) { '127.0.0.1:27017' => [ServerDescription] },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: null,
+    maxElectionId: null,
+    maxSetVersion: null,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: null
+  },
+  code: undefined,
+  cause: TopologyDescription {
+    type: 'Unknown',
+    servers: Map(1) { '127.0.0.1:27017' => [ServerDescription] },
+    stale: false,
+    compatible: true,
+    heartbeatFrequencyMS: 10000,
+    localThresholdMS: 15,
+    setName: null,
+    maxElectionId: null,
+    maxSetVersion: null,
+    commonWireVersion: 0,
+    logicalSessionTimeoutMinutes: null
+  }
+}

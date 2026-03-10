@@ -1,0 +1,88 @@
+.server-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+.server-header {
+  margin-bottom: 30px;
+}
+
+.server-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.server-header p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.server-card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 24px;
+}
+
+.server-section {
+  margin-bottom: 32px;
+}
+
+.server-section:last-child {
+  margin-bottom: 0;
+}
+
+.server-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 16px;
+}
+
+.server-info p {
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rules-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: #374151;
+  padding: 10px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.rules-list li:last-child {
+  border-bottom: none;
+}
+
+.rules-list svg {
+  color: #6366f1;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .server-card {
+    padding: 16px;
+  }
+}
